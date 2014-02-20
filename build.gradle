@@ -69,7 +69,8 @@ subprojects {
 
 }
 
-assembleTeamcityPlugin.dependsOn jar, test
+assembleTeamcityPlugin.dependsOn project(':agent').jar
+assembleTeamcityPlugin.dependsOn project(':server').jar
 
 assembleTeamcityPluginConfig {
 

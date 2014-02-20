@@ -24,3 +24,11 @@ system.each { k, v ->
 }
 ```
 
+== Building
+
+`./gradlew assembleTeamcityPlugin`
+
+== Installing
+
+Copy the `build/teamcity/teamcity-groovy-buildstep-1.0.0-SNAPSHOT.zip` file into the `.BuildServer/plugins` directory.
+
