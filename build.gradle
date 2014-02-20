@@ -1,0 +1,127 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.goldin.plugins.gradle:teamcity:0.3'
+    }
+}
+
+repositories {
+    jcenter()
+}
+
+ext.teamCityVersion = '8.0.5'
+
+apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/teamcity/teamcity.gradle'
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    version = '1.0.0-SNAPSHOT'
+
+}
+
+idea.project {
+    jdkName = '1.6'
+    ipr.withXml { provider -> provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git' }
+}
+
+subprojects {
+
+
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+    group = 'me.champeau.teamcity'
+
+    repositories {
+        jcenter()
+        maven {
+            url 'http://evgenyg.artifactoryonline.com/evgenyg/repo/'
+        }
+    }
+
+    dependencies {
+        compile 'log4j:log4j:1.2.17'
+    }
+
+    idea.module {
+        downloadSources = true
+        downloadJavadoc = false
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+
+}
+
+assembleTeamcityPlugin.dependsOn jar, test
+
+assembleTeamcityPluginConfig {
+
+    name 'groovy-buildstep'
+    displayName 'Groovy build step plugin'
+    description 'Allows to execute groovy scripts as build steps'
+    downloadUrl 'Plugin download URL'
+    email 'cedric.champeau@gmail.com'
+    vendorName 'Cédric Champeau'
+    vendorUrl 'http://melix.github.io/blog'
+
+    server project(':server')
+    agent project(':agent')
+    artifacts project(':server')
+
+}
+
+
+/**
+ * Gradle subproject with agent-side sources of the plugin.
+ */
+project(':agent') {
+    configurations {
+        compile {
+            extendsFrom teamcityAgent, teamcityCommonEx
+        }
+    }
+    dependencies {
+        compile 'org.codehaus.groovy:groovy-all:2.2.1'
+    }
+    apply plugin: 'groovy'
+}
+
+/**
+ * Gradle subproject with server-side sources of the plugin.
+ */
+project(':server') {
+    configurations {
+        compile {
+            extendsFrom teamcityServer
+        }
+    }
+}
+
+/**
+ * Copies plugin's Zip archive into ".BuildServer/plugins".
+ */
+task cpz( dependsOn: assembleTeamcityPlugin ) << {
+
+    final pluginsDir = "${ System.getProperty( 'user.home' )}/.BuildServer/plugins"
+    final archive    = assembleTeamcityPlugin.archive
+
+    delete( "$pluginsDir/$archive.name" )
+    copy { from archive; into pluginsDir }
+}

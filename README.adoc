@@ -1,0 +1,26 @@
+= Groovy build step plugin for TeamCity image:https://secure.travis-ci.org/melix/teamcity-groovy-buildstep.png?branch=master["Build Status", link="https://travis-ci.org/melix/teamcity-groovy-buildstep"]
+
+This plugin adds the ability to write build steps as Groovy script.
+
+== Usage
+
+The script exposes the following variables:
+
+* `system` : system properties (type `Map`)
+* `env` : environment variables (type `Map`)
+* `params` : all build parameters (type `Map`)
+* `configParams`: configuration parameters (type `Map`)
+* `agent`: the build agent (type `jetbrains.buildServer.agent.AgentRunningBuild`)
+* `context` : the build execution context (type: `jetbrains.buildServer.agent.BuildRunnerContext`)
+* `log`: build runner logger (type: `jetbrains.buildServer.agent.BuildProgressLogger`)
+
+== Logging
+
+For messages to appear into the build log, you mustn't use `println`. Instead, use the build logger:
+
+```groovy
+system.each { k, v ->
+    log.message "System property: $k = $v"
+}
+```
+

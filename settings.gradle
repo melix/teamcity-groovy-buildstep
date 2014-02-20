@@ -1,0 +1,4 @@
+include 'server'
+include 'agent'
+
+rootProject.name = 'teamcity-groovy-buildstep'
