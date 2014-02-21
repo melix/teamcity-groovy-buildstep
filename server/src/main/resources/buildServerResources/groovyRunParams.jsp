@@ -6,15 +6,34 @@
 <%@ taglib prefix="bs" tagdir="/WEB-INF/tags" %>
 <jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
 
-<forms:workingDirectory />
+<link rel="stylesheet" href="${teamcityPluginResourcesPath}codemirror.css">
+<script src="${teamcityPluginResourcesPath}codemirror.js"></script>
+<script src="${teamcityPluginResourcesPath}groovy.js"></script>
+<script>
+    $j(document).ready(function() {
+        var textarea = $("scriptBody");
+        var myCodeMirror = CodeMirror.fromTextArea(textarea, {
+            lineNumbers: true,
+            matchBrackets: true,
+            mode: "groovy"
+        });
+        myCodeMirror.on("change", function (cm) {
+            textarea.value = cm.getValue();
+        });
+    });
+</script>
+
+<forms:workingDirectory/>
 
 <tr id="script.content.container">
   <th>
     <label for="scriptBody">Groovy script: <l:star/></label>
   </th>
   <td>
-    <props:multilineProperty name="scriptBody" className="longField" cols="58" rows="10" expanded="true" linkTitle="Enter Groovy script content"/>
-    <span class="error" id="error_script.content"></span>
     <span class="smallNote">A Groovy script which will be executed on the build agent.</span>
+      <div class="postRel">
+        <textarea id="scriptBody" name="prop:scriptBody">${propertiesBean.properties['scriptBody']}</textarea>
+      </div>
+    <span class="error" id="error_script.content"></span>
   </td>
 </tr>
