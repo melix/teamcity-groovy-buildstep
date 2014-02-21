@@ -4,6 +4,10 @@ This plugin adds the ability to write build steps as Groovy script.
 
 == Usage
 
+Here's a screenshot of the build runner:
+
+image::assets/groovy-teamcity.png[]
+
 The script exposes the following variables:
 
 * `system` : system properties (type `Map`)
@@ -25,6 +29,8 @@ system.each { k, v ->
 ```
 
 == Building
+
+To build the project, open a command line and type in:
 
 `./gradlew assembleTeamcityPlugin`
 
