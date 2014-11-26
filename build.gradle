@@ -99,7 +99,8 @@ project(':agent') {
         }
     }
     dependencies {
-        compile 'org.codehaus.groovy:groovy-all:2.2.1'
+        compile 'org.codehaus.groovy:groovy-all:2.3.7'
+        compile 'org.apache.ivy:ivy:2.4.0-rc1'
     }
     apply plugin: 'groovy'
 }
