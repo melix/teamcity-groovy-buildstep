@@ -7,21 +7,6 @@
 <jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
 
 <link rel="stylesheet" href="${teamcityPluginResourcesPath}codemirror.css">
-<script src="${teamcityPluginResourcesPath}codemirror.js"></script>
-<script src="${teamcityPluginResourcesPath}groovy.js"></script>
-<script>
-    $j(document).ready(function() {
-        var textarea = $("scriptBody");
-        var myCodeMirror = CodeMirror.fromTextArea(textarea, {
-            lineNumbers: true,
-            matchBrackets: true,
-            mode: "groovy"
-        });
-        myCodeMirror.on("change", function (cm) {
-            textarea.value = cm.getValue();
-        });
-    });
-</script>
 
 <forms:workingDirectory/>
 
@@ -37,3 +22,20 @@
     <span class="error" id="error_script.content"></span>
   </td>
 </tr>
+<script>
+    $j.getScript("${teamcityPluginResourcesPath}codemirror.js")
+    .done(function () {
+        return $j.getScript("${teamcityPluginResourcesPath}groovy.js");
+    })
+    .done(function () {
+        var textarea = $("scriptBody");
+        var myCodeMirror = CodeMirror.fromTextArea(textarea, {
+            lineNumbers: true,
+            matchBrackets: true,
+            mode: "groovy"
+        });
+        myCodeMirror.on("change", function (cm) {
+            textarea.value = cm.getValue();
+        });
+    });
+</script>
