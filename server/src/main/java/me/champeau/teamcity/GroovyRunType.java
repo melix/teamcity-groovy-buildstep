@@ -19,6 +19,7 @@ import jetbrains.buildServer.serverSide.InvalidProperty;
 import jetbrains.buildServer.serverSide.PropertiesProcessor;
 import jetbrains.buildServer.serverSide.RunType;
 import jetbrains.buildServer.serverSide.RunTypeRegistry;
+import jetbrains.buildServer.util.PropertiesUtil;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +31,7 @@ import java.util.Map;
 public class GroovyRunType extends RunType {
     private PluginDescriptor descriptor;
 
-    public GroovyRunType(PluginDescriptor descriptor, RunTypeRegistry registry) {
+    public GroovyRunType(@NotNull final PluginDescriptor descriptor, @NotNull final RunTypeRegistry registry) {
         registry.registerRunType(this);
         this.descriptor = descriptor;
     }
@@ -58,14 +59,10 @@ public class GroovyRunType extends RunType {
     public PropertiesProcessor getRunnerPropertiesProcessor() {
         return new PropertiesProcessor() {
             @Override
-            public Collection<InvalidProperty> process(final Map<String, String> stringStringMap) {
+            public Collection<InvalidProperty> process(final Map<String, String> properties) {
                 Collection<InvalidProperty> invalid = new LinkedList<InvalidProperty>();
-                for (Map.Entry<String, String> stringStringEntry : stringStringMap.entrySet()) {
-                    String key = stringStringEntry.getKey();
-                    String value = stringStringEntry.getValue();
-                    if ("scriptBody".equals(key) && value==null) {
-                        invalid.add(new InvalidProperty(key, "Script body can be null"));
-                    }
+                if (PropertiesUtil.isEmptyOrNull(properties.get("scriptBody"))) {
+                    invalid.add(new InvalidProperty("scriptBody", "Script body cannot be empty"));
                 }
                 return invalid;
             }
