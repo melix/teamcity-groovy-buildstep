@@ -82,6 +82,8 @@ assembleTeamcityPluginConfig {
     vendorName 'Cédric Champeau'
     vendorUrl 'http://melix.github.io/blog'
 
+    useSeparateClassloader true
+
     server project(':server')
     agent project(':agent')
     artifacts project(':server')
