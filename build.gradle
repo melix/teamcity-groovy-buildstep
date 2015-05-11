@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.goldin.plugins.gradle:teamcity:0.3'
+        classpath('com.github.goldin.plugins.gradle:teamcity:0.3.1')
     }
 }
 
@@ -99,7 +99,7 @@ project(':agent') {
         }
     }
     dependencies {
-        compile 'org.codehaus.groovy:groovy-all:2.3.7'
+        compile 'org.codehaus.groovy:groovy-all:2.4.3'
         compile 'org.apache.ivy:ivy:2.4.0-rc1'
     }
     apply plugin: 'groovy'
